@@ -1,13 +1,57 @@
-Compares [Protocol Buffers](https://developers.google.com/protocol-buffers/)
-with alternatives.
+# Protobuf Test
 
+Compares [Protocol Buffer](https://developers.google.com/protocol-buffers/)
+performance with JSON, Gzipped JSON, and Gzipped CSV.
+
+Forked from [https://github.com/sanand0/benchmarks](https://github.com/sanand0/benchmarks)
+
+## Quick Start
+```
 $ python protobuftest.py
-         Read   Write    Size
-json     1.00    1.00    1.00
-proto   16.29    7.53    0.57
-json.gz  4.37    1.08    0.37
-csv.gz   5.01    0.47    0.34
+```
 
-So looks like Protobufs are significantly slower than JSON.
-The only advantage is file size.
-But if you write gzipped JSON files, they're almost as fast, and much smaller.
+## Instructions for Running Up-To-Date Benchmark
+There are a few steps to make sure you're running your benchmark on the latest and greatest releases
+of Python and Google's Protocol Buffers:
+
+1. Update Python to latest version. I prefer using homebrew:
+```
+$ brew update #or 'brew install python' if you haven't installed python via homebrew
+$ brew upgrade python
+```
+
+2. Install Google Protocol Buffer Compiler
+```
+$ brew install protobuf
+```
+
+3. Delete Existing Address Book Python Class for Reading/Writing Protobuf
+```
+rm -f pb_schemas/addressbook_pb2.py
+```
+
+4. Compile Proto Schema Into Python Class
+```
+SRC_DIR='pb_schemas' && DST_DIR='pb_schemas' && protoc -I=$SRC_DIR --python_out=$DST_DIR $SRC_DIR/addressbook.proto
+```
+
+5. Run Benchmarks
+```
+$ python protobuftest.py
+```
+
+
+## Benchmark Results
+Here are my results, running Python 2.7.9, Protobuf 2.6.1 on a Early 2013 15" Macbook Pro Retina:
+
+Results (indexed to JSON):
+          Write   Read    Size
+json      1.00    1.00    1.00
+proto     14.39   4.96    0.57
+json.gz   3.17    1.04    0.37
+csv.gz    3.51    0.25    0.34
+
+It appears that Protocol Buffers in Python are slower than JSON, but offer a file-size advantage.
+Both Gzipped JSON and Gzipped CSV are faster and smaller than Protocol Buffers.
+
+
