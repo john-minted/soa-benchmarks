@@ -45,11 +45,13 @@ $ python protobuftest.py
 Here are my results, running Python 2.7.9, Protobuf 2.6.1 on a Early 2013 15" Macbook Pro Retina:
 
 Results (indexed to JSON):
-          Write   Read    Size
-json      1.00    1.00    1.00
-proto     14.39   4.96    0.57
-json.gz   3.17    1.04    0.37
-csv.gz    3.51    0.25    0.34
+
+        | Write | Read | Size |
+--------| ------|------|------|
+json    | 1.00  | 1.00 | 1.00 |
+proto   | 14.39 | 4.96 | 0.57 |
+json.gz | 3.17  | 1.04 | 0.37 |
+csv.gz  | 3.51  | 0.25 | 0.34 |
 
 It appears that Protocol Buffers in Python are slower than JSON, but offer a file-size advantage.
 Both Gzipped JSON and Gzipped CSV are faster and smaller than Protocol Buffers.
