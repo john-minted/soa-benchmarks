@@ -42,13 +42,13 @@ for x in range(0, 100000):
 # Write Benchmarks
 print 'Running write benchmarks...'
 t0 = time.time()
-open('output/output.json', 'w').write(json.dumps(jsonseq, separators=(',', ':')))
+open('./output/output.json', 'w').write(json.dumps(jsonseq, separators=(',', ':')))
 t1 = time.time()
-open('output/output.pb', 'wb').write(addressbook.SerializeToString())
+open('./output/output.pb', 'wb').write(addressbook.SerializeToString())
 t2 = time.time()
-gzip.open('output/output.jsz', 'wb').write(json.dumps(jsonseq, separators=(',', ':')))
+gzip.open('./output/output.jsz', 'wb').write(json.dumps(jsonseq, separators=(',', ':')))
 t3 = time.time()
-out = csv.DictWriter(gzip.open('output/output.csvz', 'wb'), csvseq[0].keys())
+out = csv.DictWriter(gzip.open('./output/output.csvz', 'wb'), csvseq[0].keys())
 out.writerows(csvseq)
 t4 = time.time()
 
@@ -60,13 +60,13 @@ gzcsv_write = t4 - t3
 # Read Benchmarks
 print 'Running read benchmarks...'
 t0 = time.time()
-json.loads(open('output/output.json').read())
+json.loads(open('./output/output.json').read())
 t1 = time.time()
-addressbook_pb2.AddressBook().ParseFromString(open('output/output.pb', 'rb').read())
+addressbook_pb2.AddressBook().ParseFromString(open('./output/output.pb', 'rb').read())
 t2 = time.time()
-json.loads(gzip.open('output/output.jsz', 'rb').read())
+json.loads(gzip.open('./output/output.jsz', 'rb').read())
 t3 = time.time()
-list(csv.DictReader(gzip.open('output/output.jsz', 'rb')))
+list(csv.DictReader(gzip.open('./output/output.jsz', 'rb')))
 t4 = time.time()
 
 json_read = t1 - t0
@@ -77,10 +77,10 @@ gzcsv_read = t4 - t3
 
 # File Size Benchmarks
 print 'Running file size benchmarks...\n'
-json_size   = float(os.stat('output/output.json').st_size)
-proto_size  = float(os.stat('output/output.pb'  ).st_size)
-gzjson_size = float(os.stat('output/output.jsz' ).st_size)
-gzcsv_size  = float(os.stat('output/output.csvz').st_size)
+json_size   = float(os.stat('./output/output.json').st_size)
+proto_size  = float(os.stat('./output/output.pb'  ).st_size)
+gzjson_size = float(os.stat('./output/output.jsz' ).st_size)
+gzcsv_size  = float(os.stat('./output/output.csvz').st_size)
 
 
 #Print Output
