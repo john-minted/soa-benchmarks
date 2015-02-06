@@ -3,8 +3,6 @@
 Compares [Protocol Buffer](https://developers.google.com/protocol-buffers/)
 performance with JSON, Gzipped JSON, and Gzipped CSV.
 
-Forked from [https://github.com/sanand0/benchmarks](https://github.com/sanand0/benchmarks)
-
 ## Quick Start
 ```
 $ python protobuftest.py
@@ -14,27 +12,27 @@ $ python protobuftest.py
 There are a few steps to make sure you're running your benchmark on the latest and greatest releases
 of Python and Google's Protocol Buffers:
 
-1. Update Python to latest version. I prefer using homebrew:
+\1. Update Python to latest version. I prefer using homebrew:
 ```
 $ brew install python
 #OR
 $ brew upgrade python
 ```
-2. Install / Upgrade Google Protocol Buffer Compiler
+\2. Install / Upgrade Google Protocol Buffer Compiler
 ```
 $ brew install protobuf
 #OR
-# brew upgrade protobuf
+$ brew upgrade protobuf
 ```
-3. Delete Existing Address Book Python Class for Reading/Writing Protobuf
+\3. Delete Existing Address Book Python Class for Reading/Writing Protobuf
 ```
 rm -f pb_schemas/addressbook_pb2.py
 ```
-4. Compile Proto Schema Into Python Class
+\4. Compile Proto Schema Into Python Class
 ```
 SRC_DIR='pb_schemas' && DST_DIR='pb_schemas' && protoc -I=$SRC_DIR --python_out=$DST_DIR $SRC_DIR/addressbook.proto
 ```
-5. Run Benchmarks
+\5. Run Benchmarks
 ```
 $ python protobuftest.py
 ```
