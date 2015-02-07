@@ -1,7 +1,7 @@
 # Protobuf Test
 
 Compares [Protocol Buffer](https://developers.google.com/protocol-buffers/)
-performance with JSON, Gzipped JSON, and Gzipped CSV.
+performance with JSON and Gzipped JSON.
 
 ## Quick Start
 ```
@@ -48,9 +48,8 @@ Results (indexed to JSON):
 json    | 1.00  | 1.00 | 1.00 |
 proto   | 14.39 | 4.96 | 0.57 |
 json.gz | 3.17  | 1.04 | 0.37 |
-csv.gz  | 3.51  | 0.25 | 0.34 |
 
 It appears that Protocol Buffers in Python are slower than JSON, but offer a file-size advantage.
-Both Gzipped JSON and Gzipped CSV are faster and smaller than Protocol Buffers.
+Gzipped JSON is faster and smaller than Protocol Buffers.
 
 
