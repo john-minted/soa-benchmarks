@@ -46,13 +46,16 @@ class Benchmark(object):
         time_start = time.time()
 
         if format == 'json':
-            open('./output/output.json', 'w').write(json.dumps(self._data_dict, separators=(',', ':')))
+            with open('./output/output.json', 'w') as file:
+                file.write(json.dumps(self._data_dict, separators=(',', ':')))
 
         elif format == 'protobuf':
-            open('./output/output.pb', 'wb').write(self._data_pb.SerializeToString())
+            with open('./output/output.pb', 'wb') as file:
+                file.write(self._data_pb.SerializeToString())
 
         elif format == 'gzjson':
-            gzip.open('./output/output.jsz', 'wb').write(json.dumps(self._data_dict, separators=(',', ':')))
+            with gzip.open('./output/output.jsz', 'wb') as file:
+                file.write(json.dumps(self._data_dict, separators=(',', ':')))
 
         time_end = time.time()
 
@@ -62,13 +65,16 @@ class Benchmark(object):
         time_start = time.time()
 
         if format == 'json':
-            json.loads(open('./output/output.json').read())
+            with open('./output/output.json') as file:
+                json.loads(file.read())
 
         elif format == 'protobuf':
-            addressbook_pb2.AddressBook().ParseFromString(open('./output/output.pb', 'rb').read())
+            with open('./output/output.pb', 'rb') as file:
+                addressbook_pb2.AddressBook().ParseFromString(file.read())
 
         elif format == 'gzjson':
-            json.loads(gzip.open('./output/output.jsz', 'rb').read())
+            with gzip.open('./output/output.jsz', 'rb') as file: 
+                json.loads(file.read())
 
         time_end = time.time()
 
