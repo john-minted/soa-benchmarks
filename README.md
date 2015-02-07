@@ -5,7 +5,7 @@ performance with JSON, Gzipped JSON, and Gzipped CSV.
 
 ## Quick Start
 ```
-$ python protobuftest.py
+$ python benchmark.py
 ```
 
 ## Instructions for Running Up-To-Date Benchmark
@@ -34,7 +34,7 @@ SRC_DIR='pb_schemas' && DST_DIR='pb_schemas' && protoc -I=$SRC_DIR --python_out=
 ```
 \5. Run Benchmarks
 ```
-$ python protobuftest.py
+$ python benchmark.py
 ```
 
 
