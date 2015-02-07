@@ -3,102 +3,104 @@ import time
 import gzip
 import random
 import json
-import csv
 from pb_schemas import addressbook_pb2
 
-def person(p):
-    """Generates a person in CSV, JSON and protobufs (which is passed as a parameter)
-    Input parameter p is a protobuf that is mutated
-    Returns j and c, which are equivalent json and csv representations of the same data
-    """
-    # Create dictionaries for json and csv
-    j, c = {}, {}
-
-    #Add Person's Information
-    p.name = j['name'] = c['name'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for x in range(0, 20))
-    p.id = j['id'] = c['id'] = random.randint(0, 100000)
-    p.email = j['email'] = c['email'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz@.') for x in range(0, 30))
-
-    j['phone'] = []
-    for phone_count in range(0, 2):
-        pphone = p.phone.add()
-        jphone = {}
-        j['phone'].append(jphone)
-        pphone.number = jphone['number'] = c['%d-number' % phone_count] = ''.join(random.choice('0123456789') for x in range(0, 10))
-        pphone.type = jphone['type'] = c['%d-type' % phone_count] = random.choice([0, 1, 2])
-
-    return j, c
-
-# Add 100,000 people to addressbook
-print 'Adding 100,000 people to address book...'
-addressbook, jsonseq, csvseq = addressbook_pb2.AddressBook(), [], []
-for x in range(0, 100000):
-    p = addressbook.person.add()
-    j, c = person(p)
-    jsonseq.append(j)
-    csvseq.append(c)
-
-
 class Benchmark(object):
+
+    def __init__(self):
+        # Add 100,000 people to addressbook
+        print 'Adding 100,000 people to address book...'
+
+        self._data_pb   = addressbook_pb2.AddressBook()
+        self._data_dict = []
+
+        for x in range(0, 100000):
+            person = self._data_pb.person.add()
+            data   = self._createPerson(person)
+            self._data_dict.append(data)
+
+
+    def _createPerson(self, person):
+        """Generates a person in Python dictionary and protobuf (which is passed in as a parameter)
+        Input parameter person is a protobuf that is mutated
+        Returns a dictionary representation of protobuf schema
+        """
+        res = {}
+
+        #Add Person's Information
+        person.name  = res['name']  = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for x in range(0, 20))
+        person.id    = res['id']    = random.randint(0, 100000)
+        person.email = res['email'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz@.') for x in range(0, 30))
+
+        res['phone'] = []
+        for phone_count in range(0, 2):
+            pphone = person.phone.add()
+            resphone = {}
+            res['phone'].append(resphone)
+            pphone.number = resphone['number'] = ''.join(random.choice('0123456789') for x in range(0, 10))
+            pphone.type   = resphone['type']   = random.choice([0, 1, 2])
+
+        return res
 
     def write(self, format):
         time_start = time.time()
 
         if format == 'json':
-            open('./output/output.json', 'w').write(json.dumps(jsonseq, separators=(',', ':')))
+            open('./output/output.json', 'w').write(json.dumps(self._data_dict, separators=(',', ':')))
 
         elif format == 'protobuf':
-            open('./output/output.pb', 'wb').write(addressbook.SerializeToString())
+            open('./output/output.pb', 'wb').write(self._data_pb.SerializeToString())
 
         elif format == 'gzjson':
-            gzip.open('./output/output.jsz', 'wb').write(json.dumps(jsonseq, separators=(',', ':')))
+            gzip.open('./output/output.jsz', 'wb').write(json.dumps(self._data_dict, separators=(',', ':')))
 
         time_end = time.time()
 
         return time_start - time_end
 
+    def read(self, format):
+        time_start = time.time()
+
+        if format == 'json':
+            json.loads(open('./output/output.json').read())
+
+        elif format == 'protobuf':
+            addressbook_pb2.AddressBook().ParseFromString(open('./output/output.pb', 'rb').read())
+
+        elif format == 'gzjson':
+            json.loads(gzip.open('./output/output.jsz', 'rb').read())
+
+        time_end = time.time()
+
+        return time_start - time_end
+
+    def size(self, format):
+        extension = {'json': 'json', 'protobuf': 'pb', 'gzjson': 'jsz'}
+        return float(os.stat('./output/output.%s' % extension[format]).st_size)
+
 
     
 benchmark = Benchmark()
 
-
 # Write Benchmarks
 print 'Running write benchmarks...'
-# t0 = time.time()
-# open('./output/output.json', 'w').write(json.dumps(jsonseq, separators=(',', ':')))
-# t1 = time.time()
-# open('./output/output.pb', 'wb').write(addressbook.SerializeToString())
-# t2 = time.time()
-# gzip.open('./output/output.jsz', 'wb').write(json.dumps(jsonseq, separators=(',', ':')))
-# t3 = time.time()
-
-# json_write = t1 - t0
-# proto_write = t2 - t1
-# gzjson_write = t3 - t2
 json_write   = benchmark.write('json')
 proto_write  = benchmark.write('protobuf')
 gzjson_write = benchmark.write('gzjson')
 
+
 # Read Benchmarks
 print 'Running read benchmarks...'
-t0 = time.time()
-json.loads(open('./output/output.json').read())
-t1 = time.time()
-addressbook_pb2.AddressBook().ParseFromString(open('./output/output.pb', 'rb').read())
-t2 = time.time()
-json.loads(gzip.open('./output/output.jsz', 'rb').read())
-t3 = time.time()
-
-json_read = t1 - t0
-proto_read = t2 - t1
-gzjson_read = t3 - t2
+json_read   = benchmark.read('json')
+proto_read  = benchmark.read('protobuf')
+gzjson_read = benchmark.read('gzjson')
 
 
 # File Size Benchmarks
 print 'Running file size benchmarks...\n'
-json_size   = float(os.stat('./output/output.json').st_size)
-proto_size  = float(os.stat('./output/output.pb'  ).st_size)
-gzjson_size = float(os.stat('./output/output.jsz' ).st_size)
+json_size   = benchmark.size('json')
+proto_size  = benchmark.size('protobuf')
+gzjson_size = benchmark.size('gzjson')
 
 
 #Print Output
