@@ -1,0 +1,28 @@
+{ "namespace": "example.avro",
+  "type": "record",
+  "name": "User",
+  "fields": [
+    { "name": "email", "type": "string" },
+    { "name": "name", "type": "string" },
+    { "name": "id", "type": "int" },
+    { "name": "phone", 
+      "type": {
+        "type": "array", 
+        "items": {
+          "type": "record",
+          "name": "Phone",
+          "fields": [
+            { "name": "type", 
+              "type": {
+                "type": "enum",
+                "name": "PhoneType",
+                "symbols": ["0", "1", "2"]
+              } 
+            },
+            { "name": "number", "type": "string" }
+          ]
+        }
+      }
+    }
+  ]
+}
