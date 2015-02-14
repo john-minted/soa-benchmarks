@@ -1,6 +1,6 @@
 { "namespace": "example.avro",
   "type": "record",
-  "name": "User",
+  "name": "Person",
   "fields": [
     { "name": "email", "type": "string" },
     { "name": "name", "type": "string" },
