@@ -38,7 +38,7 @@ There are a few steps to make sure you're running your benchmark on the latest a
   ```
 1. Compile Proto Schema Into Python Class
   ```
-  SRC_DIR='pb_schemas' && DST_DIR='pb_schemas' && protoc -I=$SRC_DIR --python_out=$DST_DIR $SRC_DIR/addressbook.proto
+  SRC_DIR='schemas' && DST_DIR='schemas' && protoc -I=$SRC_DIR --python_out=$DST_DIR $SRC_DIR/addressbook.proto
   ```
 1. Run Benchmarks
   ```
