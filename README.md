@@ -56,23 +56,39 @@ Notes:
 
 Results:
 
-            | Write (s) | Read (s) | Size (bytes) |
-------------| ----------|----------|--------------|
-json        | 0.47      | 1.08     | 16,388,848   |
-json.gz     | 1.88      | 1.52     | 5,887,318    |
-json-schema | 0.47      | 13.18    | 16,388,848   |
-avro        | 9.12      | 9.88     | 8,094,892    |
-proto       | 7.87      | 7.46     | 9,183,403    |
+|            | Write (s) | Read (s) | Size (bytes) |
+|------------| ----------|----------|--------------|
+|json        | 0.47      | 1.08     | 16,388,848   |
+|json.gz     | 1.88      | 1.52     | 5,887,318    |
+|json-schema | 0.47      | 13.18    | 16,388,848   |
+|avro        | 9.12      | 9.88     | 8,094,892    |
+|proto       | 7.87      | 7.46     | 9,183,403    |
     
     
     
 Results (indexed to JSON):
 
-            | Write | Read  | Size |
-------------| ------|-------|------|
-json        | 1.00  | 1.00  | 1.00 |
-json.gz     | 4.02  | 1.40  | 0.36 |
-json-schema | 1.00  | 12.16 | 1.00 |
-avro        | 19.51 | 9.11  | 0.49 |
-proto       | 16.84 | 6.88  | 0.56 |
+|            | Write | Read  | Size |
+|------------| ------|-------|------|
+|json        | 1.00  | 1.00  | 1.00 |
+|json.gz     | 4.02  | 1.40  | 0.36 |
+|json-schema | 1.00  | 12.16 | 1.00 |
+|avro        | 19.51 | 9.11  | 0.49 |
+|proto       | 16.84 | 6.88  | 0.56 |
+
+
+## Benchmark Results - serialize each obj
+
+These bench mark results are when json, protobuf, and avro write operations iterated over a set of N objects and transformed each object into the respective format (json, protobuf, avro) and then writing to disk. Read operation was not benchmarked. Executed against a dataset of 100K objects. 
+
+Json is the fastest in this test, but protobuf and avro both clock at under 1 ms per record (~.1ms).
+
+
+| Framework | Write (s) | Write (s) / record | Size (bytes) |
+|-----------|-----------|--------------------|--------------|
+| json      | 1.21      | 0.00001            | 11889142.00  |
+| avro      | 9.35      | 0.00009            | 8095121.00   |
+| proto     | 10.99     | 0.00011            | 8983713.00   |
+
+
 
